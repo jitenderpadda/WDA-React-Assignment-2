@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import {
     Paper,
-    BottomNavigation,
-    BottomNavigationItem
+    BottomNavigation
 } from 'material-ui';
 import { Grid, Row, Col } from 'react-flexbox-grid';
 
@@ -20,7 +19,6 @@ class Footer extends Component {
             <div style={footerStyle}>
                 <Paper zDepth={3}>
                     <BottomNavigation>
-                        <Row>
                             <Col xs={12}>
                                 <Row center="xs">
                                     <Col xs={6} >
@@ -28,7 +26,6 @@ class Footer extends Component {
                                     </Col>
                                 </Row>
                             </Col>
-                        </Row>
                     </BottomNavigation>
                 </Paper>
             </div>
