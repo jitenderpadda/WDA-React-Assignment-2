@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import merge from 'lodash.merge';
 import { Grid, Row, Col } from 'react-flexbox-grid';
+import { Route, Redirect } from 'react-router';
 import firebase from 'firebase';
 import Header from './Header';
 import Footer from './Footer';
@@ -23,6 +24,7 @@ import Person from 'material-ui/svg-icons/social/person';
 
 // Adds onTouchTap property to components
 import injectTapEventPlugin from "react-tap-event-plugin";
+import Dashboard from "./Dashboard";
 injectTapEventPlugin();
 
 class App extends Component {
@@ -114,30 +116,49 @@ class App extends Component {
                             <Col xs={12}>
                                 <Row center="xs">
                                     <Col xs={12} >
-                                        <h1 style={styles.h1}>Sign in to continue</h1>
-                                        <div><br/><br/>
-                                            <RaisedButton style={styles.button}
-                                                          label="Helpdesk User"
-                                                          labelStyle={styles.label}
-                                                          primary={true}
-                                                          icon={<Phone style={styles.icon}/>}
-                                                          onTouchTap={() => this.handleClick('helpdesk')}
-                                            />
-                                            <RaisedButton style={styles.button}
-                                                          label="Tech User"
-                                                          labelStyle={styles.label}
-                                                          secondary={true}
-                                                          icon={<Person style={styles.icon}/>}
-                                                          onTouchTap={() => this.handleClick('tech')}
-                                            />
-                                        </div>
+                                        {/*Root*/}
+                                        <Route exact path="/" render={() => (
+                                            this.state.user === null ? (
+                                                    <div>
+                                                        <h1 style={styles.h1}>Sign in to continue</h1>
+                                                        <div><br/><br/>
+                                                            <RaisedButton style={styles.button}
+                                                                          label="Helpdesk User"
+                                                                          labelStyle={styles.label}
+                                                                          primary={true}
+                                                                          icon={<Phone style={styles.icon}/>}
+                                                                          onTouchTap={() => this.handleClick('helpdesk')}
+                                                            />
+                                                            <RaisedButton style={styles.button}
+                                                                          label="Tech User"
+                                                                          labelStyle={styles.label}
+                                                                          secondary={true}
+                                                                          icon={<Person style={styles.icon}/>}
+                                                                          onTouchTap={() => this.handleClick('tech')}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                )
+                                                : (
+                                                    <Redirect to="/dashboard" />
+                                                )
+                                        )} />
+
+                                        {/*Dashboard*/}
+                                        <Route exact path="/dashboard" render={() => (
+                                            this.state.user !== null ? (
+                                                    <Dashboard user={this.state.user} type={this.state.type} />
+                                                )
+                                                : (
+                                                    <Redirect to="/" />
+                                                )
+                                        )} />
                                     </Col>
                                 </Row>
                             </Col>
                         </Row>
-                        <Footer/>
                     </Grid><br/><br/>
-
+                    <Footer/>
                 </div>
             </MuiThemeProvider>
         );

@@ -10,18 +10,19 @@ class Footer extends Component {
 
     render() {
         const footerStyle ={
-            position: 'absolute',
+            position: 'fixed',
             right: 0,
             bottom: 0,
-            left: 0
+            left: 0,
+            overflow: 'hidden'
         };
         return (
             <div style={footerStyle}>
                 <Paper zDepth={3}>
                     <BottomNavigation>
-                            <Col xs={12}>
-                                <Row center="xs">
-                                    <Col xs={6} >
+                        <Col md={12}>
+                                <Row center="md">
+                                    <Col md={6} >
                                         <p>&copy; RMIT University</p>
                                     </Col>
                                 </Row>
