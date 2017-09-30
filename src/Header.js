@@ -47,10 +47,19 @@ class Header extends Component{
         };
         return (
             <div>
-                <AppBar title={<span><img src={require("./img/rmit-logo-red.png")} width={50} height={50} style={styles.img}/><text>RMIT Univeristy</text></span>}
+                <AppBar title={
+                            <span>
+                                <img src={require("./img/rmit-logo-red.png")}
+                                     width={50}
+                                     height={50}
+                                     style={styles.img}
+                                />
+                                <text>RMIT Univeristy</text>
+                            </span>
+                        }
                         onLeftIconButtonTouchTap={this.drawerOpen}
                         showMenuIconButton={this.props.user!=null}
-                        iconElementRight={
+                        iconElementRight={this.props.user === null?null:
                             <IconMenu
                                 iconButtonElement={
                                     <IconButton><MoreVertIcon/></IconButton>
@@ -63,13 +72,13 @@ class Header extends Component{
                                 <MenuItem primaryText="Sign out" onTouchTap={this.handleSignout}/>
                             </IconMenu>
                         }/>
-                <Drawer docked={false}
-                        open={this.state.openDrawer}
-                        onRequestChange={(openDrawer) => this.setState({openDrawer})}
-                >
-                    <MenuItem onTouchTap={this.drawerClose}>Menu Item</MenuItem>
-                    <MenuItem onTouchTap={this.drawerClose}>Menu Item 2</MenuItem>
-                </Drawer>
+                        <Drawer docked={false}
+                                open={this.state.openDrawer}
+                                onRequestChange={(openDrawer) => this.setState({openDrawer})}
+                        >
+                            <MenuItem onTouchTap={this.drawerClose}>Menu Item</MenuItem>
+                            <MenuItem onTouchTap={this.drawerClose}>Menu Item 2</MenuItem>
+                        </Drawer>
             </div>
         );
     }

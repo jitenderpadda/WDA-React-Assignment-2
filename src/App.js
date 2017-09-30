@@ -108,7 +108,7 @@ class App extends Component {
         return (
             <MuiThemeProvider muiTheme={getMuiTheme(theme)}>
                 <div>
-                    <Header/>
+                    <Header user={this.state.user} type={this.state.type}/>
                     <Grid fluid>
                         <Row>
                             <Col xs={12}>
@@ -135,8 +135,9 @@ class App extends Component {
                                 </Row>
                             </Col>
                         </Row>
+                        <Footer/>
                     </Grid><br/><br/>
-                    <Footer/>
+
                 </div>
             </MuiThemeProvider>
         );
