@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import firebase from 'firebase'
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import {
     AppBar,
@@ -18,6 +18,16 @@ class Header extends Component{
         };
     }
 
+    handleSignout = () => {
+        const vm = this;
+        vm.setState({
+            user: null,
+            type: null
+        });
+        localStorage.setItem('type', null);
+        firebase.auth().signOut();
+    }
+
     drawerClose=()=> {
         this.setState({
             openDrawer: false
@@ -30,10 +40,16 @@ class Header extends Component{
         });
     }
     render() {
+        const styles= {
+            img :{
+                paddingTop:8
+            }
+        };
         return (
             <div>
-                <AppBar title="RMIT Support"
+                <AppBar title={<span><img src={require("./img/rmit-logo-red.png")} width={50} height={50} style={styles.img}/><text>RMIT Univeristy</text></span>}
                         onLeftIconButtonTouchTap={this.drawerOpen}
+                        showMenuIconButton={this.props.user!=null}
                         iconElementRight={
                             <IconMenu
                                 iconButtonElement={
@@ -44,7 +60,7 @@ class Header extends Component{
                             >
                                 <MenuItem primaryText="Refresh"/>
                                 <MenuItem primaryText="Help"/>
-                                <MenuItem primaryText="Sign out"/>
+                                <MenuItem primaryText="Sign out" onTouchTap={this.handleSignout}/>
                             </IconMenu>
                         }/>
                 <Drawer docked={false}
