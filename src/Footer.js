@@ -10,11 +10,10 @@ class Footer extends Component {
 
     render() {
         const footerStyle ={
-            position: 'fixed',
+            position: 'relative',
             right: 0,
             bottom: 0,
-            left: 0,
-            overflow: 'hidden'
+            left: 0
         };
         return (
             <div style={footerStyle}>

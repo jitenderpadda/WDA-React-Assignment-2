@@ -54,7 +54,7 @@ class Header extends Component{
                                      height={50}
                                      style={styles.img}
                                 />
-                                <text>RMIT Univeristy</text>
+                                <text>RMIT University</text>
                             </span>
                         }
                         onLeftIconButtonTouchTap={this.drawerOpen}

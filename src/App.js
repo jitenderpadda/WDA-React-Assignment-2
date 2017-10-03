@@ -136,7 +136,7 @@ class App extends Component {
                                                                           icon={<Person style={styles.icon}/>}
                                                                           onTouchTap={() => this.handleClick('tech')}
                                                             />
-                                                        </div>
+                                                        </div><br/><br/><br/><br/><br/><br/><br/>
                                                     </div>
                                                 )
                                                 : (
