@@ -200,7 +200,7 @@ class Helpdesk extends Component {
                                             <RaisedButton
                                                 label="Assign"
                                                 primary={true}
-                                                onClick={() => this.assignTicketToTech}
+                                                onTouchTap={() => this.assignTicketToTech()}
                                             />
                                         </div>
                                     )}
