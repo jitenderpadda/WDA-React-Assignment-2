@@ -71,6 +71,7 @@ class App extends Component {
         const user = {};
         user['user/' + this.state.user.uid] = {
             type: type,
+            email: this.state.user.email,
             name: this.state.user.displayName,
             id: this.state.user.uid
         };

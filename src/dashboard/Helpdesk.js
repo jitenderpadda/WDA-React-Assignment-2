@@ -69,7 +69,8 @@ class Helpdesk extends Component {
     closeDialogClick = () => {
         this.setState({
             selectedTicket: null
-        })
+        });
+        this.forceUpdate();
     }
 
     /* Update the selected tech from dropdown box */
@@ -135,10 +136,10 @@ class Helpdesk extends Component {
                     <Col md={(selectedTicket !== null ? 7 : 12)}>
                         <div>
                             {this.state.tickets.length < 1 && (
-                                <p className="alert alert-info">There are no tickets to display.</p>
+                                <p className="">There are no tickets to display.</p>
                             )}
                             <List style={{backgroundColor: darkBlack}}>
-                                <Subheader>Tickets</Subheader>
+                                <Subheader style={{fontSize: 25}}>Tickets</Subheader>
                                 {this.state.tickets.map((ticket, i) => (
                                     <ListItem key={i} onClick={() => this.ticketDetailsClick(ticket)}
                                               primaryText={ticket.software_issue}
@@ -157,8 +158,8 @@ class Helpdesk extends Component {
                         <div>
                             <RaisedButton
                                 label="Close Dialog"
-                                primary={true}
-                                onTouchTap={() => this.closeDialogClick}
+                                secondary={true}
+                                onTouchTap={() => this.closeDialogClick()}
                             />
                             <h3 className="text-uppercase">Ticket Details</h3>
                             <p><b>ID: </b>{selectedTicket.id}</p>

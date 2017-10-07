@@ -1,8 +1,7 @@
-/*
 import React, { Component } from 'react';
-import { apiurl } from "../../helpers/constants";
+import { apiurl } from "../helpers/constants";
 import firebase from 'firebase';
-import { Panel } from 'react-bootstrap';
+//import { Panel } from 'react-bootstrap';
 
 class Tech extends Component {
     state = {
@@ -10,9 +9,9 @@ class Tech extends Component {
     }
 
     componentDidMount() {
-        /!* Fetch all tickets and check which tickets have
+        {/* Fetch all tickets and check which tickets have
             been assigned to this tech user
-         *!/
+         */}
         fetch(apiurl + '/api/tickets')
             .then((response) => response.json())
             .then((responseJson) => {
@@ -22,7 +21,7 @@ class Tech extends Component {
                         if(snapshot.val() !== null && snapshot.val().user_id === this.props.user.uid) {
                             myTickets.push(responseJson[ele]);
 
-                            /!* Force the view to re-render (async problem) *!/
+                            {/* Force the view to re-render (async problem) */}
                             this.forceUpdate();
                         }
                     })
@@ -45,13 +44,13 @@ class Tech extends Component {
                     <div className="alert alert-info">You have not been assigned any tickets.</div>
                 )
                 : tickets.map((ticket, i) => (
-                    <Panel key={i} header={ticket.title}>
+                        //<Panel key={i} header={ticket.title}>
                         <p>{ticket.comment}</p>
-                    </Panel>
+                //</Panel>
                 ))}
             </div>
         );
     }
 }
 
-export default Tech;*/
+export default Tech;
