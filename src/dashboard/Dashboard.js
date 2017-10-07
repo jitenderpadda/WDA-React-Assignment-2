@@ -18,17 +18,17 @@ class Dashboard extends  Component{
         }
         return (
             <div>
-                <Row>
-                    <Col>
+                {/*<Row>
+                    <Col>*/}
                         {this.props.type === 'helpdesk' ? (
                                 <Helpdesk />
                             )
                             : this.props.type === 'tech' ? (
-                                    <Tech user={this.props.user} />
+                                {/*<Tech user={this.props.user} />*/}
                                 )
                                 :null}
-                    </Col>
-                </Row>
+                    {/*</Col>
+                </Row>*/}
             </div>
         );
     }

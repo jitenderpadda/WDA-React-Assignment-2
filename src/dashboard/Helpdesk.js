@@ -130,7 +130,7 @@ class Helpdesk extends Component {
 
         return (
             <div>
-                <!--helpdesk tickets display-->
+                {/*helpdesk tickets display-->*/}
                 <Row>
                     <Col md={(selectedTicket !== null ? 7 : 12)}>
                         <div>
