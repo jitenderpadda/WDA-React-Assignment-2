@@ -22,3 +22,9 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.user-image {
+  height: 10%;
+  width: 100%;
+  padding-top: 10%;
+}

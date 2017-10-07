@@ -24,7 +24,7 @@ import Person from 'material-ui/svg-icons/social/person';
 
 // Adds onTouchTap property to components
 import injectTapEventPlugin from "react-tap-event-plugin";
-import Dashboard from "./Dashboard";
+import Dashboard from "./dashboard/Dashboard";
 injectTapEventPlugin();
 
 class App extends Component {

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import firebase from 'firebase'
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import {
@@ -9,8 +9,8 @@ import {
     Drawer,
 } from 'material-ui';
 
-class Header extends Component{
-    constructor(props){
+class Header extends Component {
+    constructor(props) {
         super(props);
         this.state = {
             openDialog: true,
@@ -28,27 +28,28 @@ class Header extends Component{
         firebase.auth().signOut();
     }
 
-    drawerClose=()=> {
+    drawerClose = () => {
         this.setState({
             openDrawer: false
         });
     }
 
-    drawerOpen=() => {
+    drawerOpen = () => {
         this.setState({
             openDrawer: true
         });
     }
+
     render() {
-        const styles= {
-            img :{
-                paddingTop:8
+        const styles = {
+            img: {
+                paddingTop: 8
             }
         };
         return (
             <div>
                 <AppBar title={
-                            <span>
+                    <span>
                                 <img src={require("./img/rmit-logo-red.png")}
                                      width={50}
                                      height={50}
@@ -56,29 +57,21 @@ class Header extends Component{
                                 />
                                 <text>RMIT University</text>
                             </span>
-                        }
+                }
                         onLeftIconButtonTouchTap={this.drawerOpen}
-                        showMenuIconButton={this.props.user!=null}
-                        iconElementRight={this.props.user === null?null:
-                            <IconMenu
-                                iconButtonElement={
-                                    <IconButton><MoreVertIcon/></IconButton>
-                                }
-                                targetOrigin={{horizontal: 'right', vertical: 'top'}}
-                                anchorOrigin={{horizontal: 'right', vertical: 'top'}}
-                            >
-                                <MenuItem primaryText="Refresh"/>
-                                <MenuItem primaryText="Help"/>
-                                <MenuItem primaryText="Sign out" onTouchTap={this.handleSignout}/>
-                            </IconMenu>
-                        }/>
-                        <Drawer docked={false}
-                                open={this.state.openDrawer}
-                                onRequestChange={(openDrawer) => this.setState({openDrawer})}
-                        >
-                            <MenuItem onTouchTap={this.drawerClose}>Menu Item</MenuItem>
-                            <MenuItem onTouchTap={this.drawerClose}>Menu Item 2</MenuItem>
-                        </Drawer>
+                        showMenuIconButton={this.props.user != null}
+                />
+                {this.props.user !== null &&
+                <Drawer docked={false}
+                        open={this.state.openDrawer}
+                        onRequestChange={(openDrawer) => this.setState({openDrawer})}
+                >
+                    <MenuItem><img src={this.props.user.photoURL} className="user-image"/></MenuItem>
+                    <MenuItem>{this.props.user.displayName}</MenuItem>
+                    <MenuItem onTouchTap={this.handleSignout}>Sign Out</MenuItem>
+                    <MenuItem onTouchTap={this.drawerClose}>Close</MenuItem>
+                </Drawer>
+                }
             </div>
         );
     }
