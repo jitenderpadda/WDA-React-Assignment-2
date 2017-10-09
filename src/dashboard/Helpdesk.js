@@ -3,6 +3,7 @@ import {apiurl} from '../helpers/constants';
 import {Row, Col} from 'react-flexbox-grid';
 import firebase from 'firebase';
 import {
+    Card, CardHeader, CardText,
     RaisedButton,
 } from 'material-ui';
 
@@ -13,7 +14,6 @@ import {darkBlack} from 'material-ui/styles/colors';
 class Helpdesk extends Component {
     state = {
         tickets: [],
-        selectedTicket: null,
         techUsers: [],
         selectedTech: null,
         selectedPriority: null,
@@ -31,9 +31,8 @@ class Helpdesk extends Component {
                 const pendingTickets = [];
                 for (const ele in responseJson) {
                     firebase.database().ref('ticket/' + responseJson[ele].id).on('value', (snapshot) => {
-                        if (snapshot.val() === null) {
+                        if (snapshot.val() === null || snapshot.val().status === 'escalated') {
                             pendingTickets.push(responseJson[ele]);
-
                             /* Force the view to re-render (async problem) */
                             this.forceUpdate();
                         }
@@ -65,14 +64,6 @@ class Helpdesk extends Component {
         })
     }
 
-    /* Close button for dialog */
-    closeDialogClick = () => {
-        this.setState({
-            selectedTicket: null
-        });
-        this.forceUpdate();
-    }
-
     /* Update the selected tech from dropdown box */
     handleTechChange = (e) => {
         this.setState({
@@ -93,7 +84,7 @@ class Helpdesk extends Component {
     }
 
     /* Click assign button */
-    assignTicketToTech = () => {
+    assignTicketToTech = (ticket) => {
         if (this.state.selectedTech === null) {
             return;
         }
@@ -106,8 +97,8 @@ class Helpdesk extends Component {
 
         /* Add assigned ticket+tech into database*/
         const data = {};
-        data['ticket/' + this.state.selectedTicket.id] = {
-            ticket_id: this.state.selectedTicket.id,
+        data['ticket/' + ticket.id] = {
+            ticket_id: ticket.id,
             user_id: this.state.selectedTech, // store Tech ID
             priority: this.state.selectedPriority, //store ticket priority
             escalation_level: this.state.selectedEscalationLevel //store escalation level
@@ -117,98 +108,87 @@ class Helpdesk extends Component {
         window.location.reload();
     }
 
-    /* Toggle the ticket dialog */
-    ticketDetailsClick = (ticket) => {
-        const {selectedTicket} = this.state;
-        this.setState({
-            selectedTicket: (selectedTicket !== null && selectedTicket.id === ticket.id ? null : ticket)
-        });
-    }
-
     render() {
-        const vm = this
-        const {selectedTicket, tickets, techUsers, selectedPriority, selectedEscalationLevel} = this.state
+        const {techUsers, selectedPriority, selectedEscalationLevel} = this.state
 
         return (
             <div>
                 {/*helpdesk tickets display-->*/}
                 <Row>
-                    <Col md={(selectedTicket !== null ? 7 : 12)}>
-                        <div>
-                            {this.state.tickets.length < 1 && (
-                                <p className="">There are no tickets to display.</p>
-                            )}
-                            <List style={{backgroundColor: darkBlack}}>
-                                <Subheader style={{fontSize: 25}}>Tickets</Subheader>
-                                {this.state.tickets.map((ticket, i) => (
-                                    <ListItem key={i} onClick={() => this.ticketDetailsClick(ticket)}
-                                              primaryText={ticket.software_issue}
-                                              secondaryText={
-                                                  <p>
-                                                      {ticket.comment}
-                                                  </p>
-                                              }
-                                              secondaryTextLines={2}
-                                    />
-                                ))}
-                            </List>
-                        </div>
-                    </Col>
-                    {selectedTicket !== null && (
-                        <div>
-                            <RaisedButton
-                                label="Close Dialog"
-                                secondary={true}
-                                onTouchTap={() => this.closeDialogClick()}
-                            />
-                            <h3 className="text-uppercase">Ticket Details</h3>
-                            <p><b>ID: </b>{selectedTicket.id}</p>
-                            <p><b>Name: </b><br/>{selectedTicket.name}</p>
-                            <p><b>Email: </b><br/>{selectedTicket.email}</p>
-                            <p><b>Title: </b><br/>{selectedTicket.software_issue}</p>
-                            <p><b>Operating System: </b><br/>{selectedTicket.operating_system}</p>
-                            <p><b>Comment: </b><br/>{selectedTicket.comment}</p>
-                            <p><b>Created On: </b><br/>{selectedTicket.created_at}</p>
-                            {techUsers.length > 0 && (
-                                <div>
-                                    <hr/>
-                                    <h3 className="text-uppercase">Assign to tech</h3>
-                                    <select className="form-control" onChange={this.handleTechChange} defaultValue="-1">
-                                        <option value="-1" defaultValue disabled>Select a tech user</option>
-                                        {techUsers.map((user, i) => (
-                                            <option key={i} value={user.id}>{user.name}</option>
-                                        ))}
-                                    </select>
-                                    <h3 className="text-uppercase">Set Ticket Priority</h3>
-                                    <select className="form-control" onChange={this.handlePriorityChange}
-                                            defaultValue="-1">
-                                        <option value="-1" defaultValue disabled>Select priority</option>
-                                        <option key="1" value="Low">Low</option>
-                                        <option key="2" value="Moderate">Moderate</option>
-                                        <option key="3" value="High">High</option>
-                                    </select>
-                                    <h3 className="text-uppercase">Set Escalation Level</h3>
-                                    <select className="form-control" onChange={this.handleEscalationChange}
-                                            defaultValue="-1">
-                                        <option value="-1" defaultValue disabled>Select escalation level</option>
-                                        <option key="1" value="1">1</option>
-                                        <option key="2" value="2">2</option>
-                                        <option key="3" value="3">3</option>
-                                    </select>
-                                    {selectedTicket !== null && selectedEscalationLevel != null && selectedPriority != null && (
-                                        <div className="clearfix"><br/>
-                                            <RaisedButton
-                                                label="Assign"
-                                                primary={true}
-                                                onTouchTap={() => this.assignTicketToTech()}
-                                            />
+                    <div className="ticket">
+                        {this.state.tickets.length < 1 && (
+                            <p>There are no tickets to display.</p>
+                        )}
+                        {this.state.tickets.map((ticket, i) => (
+                            <Card key={i}>
+                                <CardHeader
+                                    title={ticket.software_issue}
+                                    subtitle={ticket.email}
+                                    actAsExpander={true}
+                                    showExpandableButton={true}
+                                />
+                                <CardText expandable={true}>
+                                    <Row>
+                                        <div className="ticket-details">
+                                            <h3 className="text-uppercase">Ticket Details</h3>
+                                            <p><b>ID: </b>{ticket.id}</p>
+                                            <p><b>Name: </b>{ticket.name}</p>
+                                            <p><b>Email: </b>{ticket.email}</p>
+                                            <p><b>Title: </b>{ticket.software_issue}</p>
+                                            <p><b>Operating System: </b>{ticket.operating_system}</p>
+                                            <p><b>Comment: </b>{ticket.comment}</p>
+                                            <p><b>Created On: </b>{ticket.created_at}</p>
                                         </div>
-                                    )}
-                                </div>
-                            )
-                            }
-                        </div>
-                    )}
+                                        <div className="ticket-options">
+                                            {techUsers.length > 0 && (
+                                                <div>
+                                                    <h3 className="text-uppercase">Assign to tech</h3>
+                                                    <select className="form-control" onChange={this.handleTechChange}
+                                                            defaultValue="-1">
+                                                        <option value="-1" defaultValue disabled>Select a tech user
+                                                        </option>
+                                                        {techUsers.map((user, i) => (
+                                                            <option key={i} value={user.id}>{user.name}</option>
+                                                        ))}
+                                                    </select>
+                                                    <h3 className="text-uppercase">Set Ticket Priority</h3>
+                                                    <select className="form-control"
+                                                            onChange={this.handlePriorityChange}
+                                                            defaultValue="-1">
+                                                        <option value="-1" defaultValue disabled>Select priority
+                                                        </option>
+                                                        <option key="1" value="Low">Low</option>
+                                                        <option key="2" value="Moderate">Moderate</option>
+                                                        <option key="3" value="High">High</option>
+                                                    </select>
+                                                    <h3 className="text-uppercase">Set Escalation Level</h3>
+                                                    <select className="form-control"
+                                                            onChange={this.handleEscalationChange}
+                                                            defaultValue="-1">
+                                                        <option value="-1" defaultValue disabled>Select escalation level
+                                                        </option>
+                                                        <option key="1" value="1">1</option>
+                                                        <option key="2" value="2">2</option>
+                                                        <option key="3" value="3">3</option>
+                                                    </select>
+                                                    {selectedEscalationLevel != null && selectedPriority != null && (
+                                                        <div className="clearfix"><br/>
+                                                            <RaisedButton
+                                                                label="Assign"
+                                                                primary={true}
+                                                                onTouchTap={() => this.assignTicketToTech(ticket)}
+                                                            />
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )
+                                            }
+                                        </div>
+                                    </Row>
+                                </CardText>
+                            </Card>
+                        ))}
+                    </div>
                 </Row>
             </div>
         );
