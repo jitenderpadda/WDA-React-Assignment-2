@@ -30,7 +30,7 @@ class Editor extends React.Component {
         alert(this.state.ticketStatus);
         //Insert Comment in Laravel
         const comment={};
-        comment["description"]="TEST-REACT";
+        comment["description"]=this.state.comment;
         comment["email"]=this.props.user.email;
         comment["ticket_id"]=this.props.ticket.id;
         console.log(JSON.stringify(comment));
@@ -41,24 +41,24 @@ class Editor extends React.Component {
             headers: {
                 'Content-Type': 'application/json'
             }
-        })
+            })
             .then((response) => response.json())
             .then((responseJson) => {
                 alert(responseJson);
                 console.log(responseJson);
             })//Update Ticket Status
-            /*.then(
-                const ticket={};
-                ticket["id"]=this.props.ticket.id;
-                ticket["status"]=this.state.ticketStatus;
-                fetch(apiurl + '/api/comments',{
-                    method: "POST",
-                    body:JSON.stringify(ticket),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-            )*/
+            .then(() => {
+            const updatedTicket=this.props.ticket;
+            console.log(updatedTicket);
+            updatedTicket["status"]=this.state.ticketStatus;
+            fetch(apiurl + '/api/tickets/'+this.props.ticket.id,{
+                method: "PUT",
+                body:JSON.stringify(updatedTicket),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+        })
     }
 
     render() {

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import merge from 'lodash.merge';
 import { Grid, Row, Col } from 'react-flexbox-grid';
@@ -66,8 +65,7 @@ class App extends Component {
         this.setState({
             type: type
         });
-        /* Add user to our mongodb database */
-        /* MongoDB schema - will insert the user's details into the database */
+        /* Add user to our Firebase database */
         const user = {};
         user['user/' + this.state.user.uid] = {
             type: type,
