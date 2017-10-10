@@ -2,6 +2,7 @@ import React from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {RaisedButton} from "material-ui";
+import {apiurl} from './helpers/constants';
 
 class Editor extends React.Component {
     constructor(props) {
@@ -27,6 +28,37 @@ class Editor extends React.Component {
     submit() {
         alert(this.state.comment);
         alert(this.state.ticketStatus);
+        //Insert Comment in Laravel
+        const comment={};
+        comment["description"]="TEST-REACT";
+        comment["email"]=this.props.user.email;
+        comment["ticket_id"]=this.props.ticket.id;
+        console.log(JSON.stringify(comment));
+        //Update Ticket Status
+        fetch(apiurl + '/api/comments',{
+            method: "POST",
+            body:JSON.stringify(comment),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((response) => response.json())
+            .then((responseJson) => {
+                alert(responseJson);
+                console.log(responseJson);
+            })//Update Ticket Status
+            /*.then(
+                const ticket={};
+                ticket["id"]=this.props.ticket.id;
+                ticket["status"]=this.state.ticketStatus;
+                fetch(apiurl + '/api/comments',{
+                    method: "POST",
+                    body:JSON.stringify(ticket),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+            )*/
     }
 
     render() {
@@ -40,8 +72,9 @@ class Editor extends React.Component {
                         defaultValue="-1">
                     <option value="-1" defaultValue disabled>Select priority
                     </option>
-                    <option key="1" value="Resolved">Resolved</option>
-                    <option key="2" value="Unresolved">Unresolved</option>
+                    <option key="1" value="In Progress">In Progress</option>
+                    <option key="2" value="Resolved">Resolved</option>
+                    <option key="3" value="Unresolved">Unresolved</option>
                 </select>
                 <br/>
                 {this.state.comment != null && this.state.ticketStatus != null && (
