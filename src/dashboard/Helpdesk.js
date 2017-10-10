@@ -3,8 +3,11 @@ import {apiurl} from '../helpers/constants';
 import {Row, Col} from 'react-flexbox-grid';
 import firebase from 'firebase';
 import {
-    Card, CardHeader, CardText,
+    Card,
+    CardHeader,
+    CardText,
     RaisedButton,
+    Snackbar
 } from 'material-ui';
 
 import Subheader from 'material-ui/Subheader';
@@ -17,9 +20,20 @@ class Helpdesk extends Component {
         techUsers: [],
         selectedTech: null,
         selectedPriority: null,
-        selectedEscalationLevel: null
+        selectedEscalationLevel: null,
+        open : false
     }
+    handleTouchTap = () => {
+        this.setState({
+            open: true,
+        });
+    };
 
+    handleRequestClose = () => {
+        this.setState({
+            open: false,
+        });
+    };
     /* Once component has mounted, fetch from API + firebase */
     componentDidMount() {
         /* Fetch all tickets and check which tickets have
@@ -104,8 +118,12 @@ class Helpdesk extends Component {
             escalation_level: this.state.selectedEscalationLevel //store escalation level
         };
         firebase.database().ref().update(data)
-        alert('Tech successfully assigned to ticket!');
-        window.location.reload();
+        //alert('Tech successfully assigned to ticket!');
+        this.setState({
+            open: true
+        });
+        this.forceUpdate();
+        //window.location.reload();
     }
 
     render() {
@@ -189,6 +207,13 @@ class Helpdesk extends Component {
                             </Card>
                         ))}
                     </div>
+                    <Snackbar
+                        open={this.state.open}
+                        message="Ticket has been assigned"
+                        autoHideDuration={4000}
+                        onRequestClose={this.handleRequestClose}
+                        bodyStyle={{ backgroundColor: 'teal', color: 'coral' }}
+                    />
                 </Row>
             </div>
         );
